@@ -1,0 +1,576 @@
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Любимый Мадикош 💖</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-glow: #ff007f;
+            --secondary-glow: #00f0ff;
+            --gold: #ffd700;
+            --bg-dark: #1a0b2e;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(-45deg, #0b0514, #1a0b2e, #31004a, #110022);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            perspective: 1000px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Canvas Backgrounds */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        #particles { z-index: 1; }
+        #confetti { z-index: 100; }
+
+        /* Floating Hearts */
+        .hearts-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 24px;
+            animation: floatUp linear forwards;
+            opacity: 0;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 127, 0.5));
+            will-change: transform, opacity;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-120vh) scale(1.5) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main Content */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .hero {
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 600;
+            font-style: italic;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 0 20px var(--primary-glow), 0 0 40px var(--primary-glow), 0 0 80px rgba(255, 0, 127, 0.4);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.5s, glowPulse 3s infinite alternate 2s;
+        }
+
+        .hero h2 {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 10px var(--secondary-glow);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 1s;
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glowPulse {
+            0% { text-shadow: 0 0 20px var(--primary-glow), 0 0 40px var(--primary-glow), 0 0 60px rgba(255, 0, 127, 0.2); }
+            100% { text-shadow: 0 0 30px var(--primary-glow), 0 0 60px var(--primary-glow), 0 0 100px rgba(255, 0, 127, 0.6); }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px 40px;
+            max-width: 600px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 1.5s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card p {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            line-height: 1.6;
+            color: #f0f0f0;
+            font-weight: 300;
+        }
+
+        /* Interactive Button */
+        .gift-btn {
+            position: relative;
+            background: linear-gradient(45deg, #ff007f, #7000ff);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 18px 40px;
+            border: 2px solid transparent;
+            border-radius: 50px;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 2s;
+            overflow: hidden;
+            z-index: 20;
+        }
+
+        .gift-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .gift-btn:hover {
+            transform: scale(1.08);
+            border-color: var(--gold);
+            box-shadow: 0 0 30px var(--primary-glow), 0 0 15px var(--gold);
+            animation: vibrate 0.3s linear infinite;
+        }
+
+        .gift-btn:hover::before {
+            left: 100%;
+        }
+
+        @keyframes vibrate {
+            0% { transform: scale(1.08) translate(0); }
+            25% { transform: scale(1.08) translate(-1px, 1px); }
+            50% { transform: scale(1.08) translate(1px, -1px); }
+            75% { transform: scale(1.08) translate(-1px, -1px); }
+            100% { transform: scale(1.08) translate(1px, 1px); }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(11, 5, 20, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: rgba(30, 10, 50, 0.6);
+            border: 1px solid var(--primary-glow);
+            text-align: center;
+            transform: scale(0.8) translateY(50px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 50px;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            box-shadow: 0 0 50px rgba(255, 0, 127, 0.3), inset 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
+        .modal-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: #fff;
+            text-shadow: 0 0 20px var(--primary-glow);
+            margin-bottom: 30px;
+        }
+
+        .close-btn {
+            background: transparent;
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-color: var(--secondary-glow);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        /* Audio Player Button */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 40;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px var(--secondary-glow);
+        }
+
+        .music-control.playing {
+            animation: pulseMusic 2s infinite;
+        }
+
+        @keyframes pulseMusic {
+            0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 240, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+        }
+
+        @media (max-width: 768px) {
+            .glass-card {
+                padding: 20px;
+                margin: 0 20px 30px;
+            }
+            .modal-content {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            .music-control {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Роялти-фри классическая романтическая музыка (Клод Дебюсси - Лунный свет) -->
+    <audio id="bg-music" loop>
+        <source src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Claude_Debussy_-_Clair_de_lune_%28played_by_Simone_Renzi%29.ogg" type="audio/ogg">
+    </audio>
+
+    <canvas id="particles"></canvas>
+    <div class="hearts-container" id="hearts"></div>
+
+    <div class="content-wrapper">
+        <div class="hero">
+            <h1>Любимый Мадикош 💖</h1>
+            <h2>Этот день создан для тебя ✨</h2>
+        </div>
+
+        <div class="glass-card">
+            <p>Пусть каждый твой день будет наполнен радостью, теплом и успехом.</p>
+        </div>
+
+        <button class="gift-btn" id="gift-btn">Открыть подарок 🎁</button>
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content glass-card">
+            <h2>Ты очень важен(на) для меня 💕</h2>
+            <button class="close-btn" id="close-btn">Закрыть</button>
+        </div>
+    </div>
+
+    <canvas id="confetti"></canvas>
+
+    <div class="music-control" id="music-btn" title="Включить/выключить музыку">🎵</div>
+
+    <script>
+        // 1. Управление музыкой
+        const audio = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-btn');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+                musicBtn.classList.remove('playing');
+                musicBtn.style.opacity = '0.7';
+            } else {
+                audio.play().then(() => {
+                    musicBtn.classList.add('playing');
+                    musicBtn.style.opacity = '1';
+                }).catch(e => console.log("Autoplay blocked by browser"));
+            }
+            isPlaying = !isPlaying;
+        }
+
+        musicBtn.addEventListener('click', toggleMusic);
+
+        // Попытка автовоспроизведения при первом клике на странице (обход блокировок браузера)
+        document.body.addEventListener('click', () => {
+            if (!isPlaying) {
+                toggleMusic();
+            }
+        }, { once: true });
+
+
+        // 2. Генератор плавающих сердечек
+        const heartsContainer = document.getElementById('hearts');
+        const heartsIcons = ['💖', '💕', '✨', '💜', '💙'];
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = heartsIcons[Math.floor(Math.random() * heartsIcons.length)];
+            
+            // Рандомная позиция, размер и длительность
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            
+            heartsContainer.appendChild(heart);
+
+            // Удаление после завершения анимации
+            setTimeout(() => {
+                heart.remove();
+            }, 10000);
+        }
+
+        setInterval(createHeart, 400); // Создавать новое сердце каждые 400мс
+
+
+        // 3. Звездная пыль (Canvas Background Particles)
+        const canvasParticles = document.getElementById('particles');
+        const ctxP = canvasParticles.getContext('2d');
+        let particlesArray = [];
+
+        function resizeCanvasP() {
+            canvasParticles.width = window.innerWidth;
+            canvasParticles.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvasP);
+        resizeCanvasP();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvasParticles.width;
+                this.y = Math.random() * canvasParticles.height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * -0.5 - 0.1;
+                this.color = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.1})`;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y < 0) {
+                    this.y = canvasParticles.height;
+                    this.x = Math.random() * canvasParticles.width;
+                }
+            }
+            draw() {
+                ctxP.fillStyle = this.color;
+                ctxP.beginPath();
+                ctxP.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctxP.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numParticles = window.innerWidth < 768 ? 50 : 100; // Оптимизация для мобилок
+            for (let i = 0; i < numParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            ctxP.clearRect(0, 0, canvasParticles.width, canvasParticles.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+
+        // 4. Логика модального окна и Конфетти (Canvas)
+        const modal = document.getElementById('modal');
+        const giftBtn = document.getElementById('gift-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const canvasConfetti = document.getElementById('confetti');
+        const ctxC = canvasConfetti.getContext('2d');
+        let confettiArray = [];
+        let confettiAnimationId;
+
+        function resizeCanvasC() {
+            canvasConfetti.width = window.innerWidth;
+            canvasConfetti.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvasC);
+        resizeCanvasC();
+
+        const confettiColors = ['#ff007f', '#00f0ff', '#ffd700', '#ffffff', '#7000ff'];
+
+        class ConfettiPiece {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 10 + 5;
+                this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                this.speedX = Math.random() * 10 - 5;
+                this.speedY = Math.random() * -10 - 5;
+                this.gravity = 0.3;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 10 - 5;
+                this.wobble = Math.random() * 10;
+                this.wobbleSpeed = Math.random() * 0.1;
+            }
+            update() {
+                this.speedY += this.gravity;
+                this.x += this.speedX + Math.sin(this.wobble) * 2;
+                this.y += this.speedY;
+                this.rotation += this.rotationSpeed;
+                this.wobble += this.wobbleSpeed;
+            }
+            draw() {
+                ctxC.save();
+                ctxC.translate(this.x, this.y);
+                ctxC.rotate(this.rotation * Math.PI / 180);
+                ctxC.fillStyle = this.color;
+                ctxC.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+                ctxC.restore();
+            }
+        }
+
+        function fireConfetti() {
+            for (let i = 0; i < 150; i++) {
+                confettiArray.push(new ConfettiPiece(window.innerWidth / 2, window.innerHeight / 2 + 100));
+            }
+            
+            function animateConfetti() {
+                ctxC.clearRect(0, 0, canvasConfetti.width, canvasConfetti.height);
+                for (let i = 0; i < confettiArray.length; i++) {
+                    confettiArray[i].update();
+                    confettiArray[i].draw();
+                    // Удаляем вылетевшие за экран
+                    if (confettiArray[i].y > canvasConfetti.height) {
+                        confettiArray.splice(i, 1);
+                        i--;
+                    }
+                }
+                
+                if (confettiArray.length > 0) {
+                    confettiAnimationId = requestAnimationFrame(animateConfetti);
+                } else {
+                    ctxC.clearRect(0, 0, canvasConfetti.width, canvasConfetti.height);
+                }
+            }
+            animateConfetti();
+        }
+
+        giftBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+            fireConfetti();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            confettiArray = []; // Остановить конфетти при закрытии
+            ctxC.clearRect(0, 0, canvasConfetti.width, canvasConfetti.height);
+            cancelAnimationFrame(confettiAnimationId);
+        });
+
+    </script>
+</body>
+</html>
+
+```
